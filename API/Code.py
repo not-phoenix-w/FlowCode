@@ -71,8 +71,9 @@ def generation(uuid):
     dl=((cor[0]-cor[2])**2+(cor[1]-cor[3])**2)**(1/2)
     sh=((cor[2]-cor[4])**2+(cor[2]-cor[4])**2)**(1/2)
     def data_filter(data=pd.DataFrame, high=float, S2=float, meters=float, places=int):
-        model_cord = data[(data[0] == high) & (data[34] == S2) & (data[36] == meters) & (data[38] == places)]
-        model_cord.to_csv(r'/projects/{uuid}', header='model', index=None, sep=' ', mode='a')
+        model_cord = data[(data[0] == high) & (S2-1000<data[34] < S2+1000) & (meters-5<data[36] < meters+5) & (data[38] == places)]
+        slice_model = model.loc[:, model_cord.columns[38:]]
+        slice_model.to_csv(r'/projects/{uuid}', header='model', index=None, sep=' ', mode='a')
     model = CTGAN.load('my_model.pkl')  # подгрузка матрицы
     new_data = ctgan.sample(30000)  # генерация 300 сэмплов (300 строк с данными). ЧИСЛО ГЕНЕРАЦИЙ СТАВИТЬ КРАТНЫМ 3!!!
     data_filter(new_data, fl, s, h, pl)
