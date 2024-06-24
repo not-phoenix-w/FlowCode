@@ -73,6 +73,7 @@ def generation(uuid):
     def data_filter(data=pd.DataFrame, high=float, S2=float, meters=float, places=int):
         model_cord = data[(data[0] == high) & (S2-1000<data[34] < S2+1000) & (meters-5<data[36] < meters+5) & (data[38] == places)]
         slice_model = model.loc[:, model_cord.columns[38:]]
+        slice_model = slice_model.transpose()
         slice_model.to_csv(r'/projects/{uuid}', header='model', index=None, sep=' ', mode='a')
     model = CTGAN.load('my_model.pkl')  # подгрузка матрицы
     new_data = ctgan.sample(30000)  # генерация 300 сэмплов (300 строк с данными). ЧИСЛО ГЕНЕРАЦИЙ СТАВИТЬ КРАТНЫМ 3!!!
